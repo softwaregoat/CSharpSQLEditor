@@ -1,0 +1,9 @@
+G:\Projects\Visual_Studio\CSharp\SQLEditor\SQLEditor\bin\Debug\SQLEditor.exe.config
+G:\Projects\Visual_Studio\CSharp\SQLEditor\SQLEditor\bin\Debug\SQLEditor.exe
+G:\Projects\Visual_Studio\CSharp\SQLEditor\SQLEditor\bin\Debug\SQLEditor.pdb
+G:\Projects\Visual_Studio\CSharp\SQLEditor\SQLEditor\obj\Debug\SQLEditor.csprojAssemblyReference.cache
+G:\Projects\Visual_Studio\CSharp\SQLEditor\SQLEditor\obj\Debug\SQLEditor.Form1.resources
+G:\Projects\Visual_Studio\CSharp\SQLEditor\SQLEditor\obj\Debug\SQLEditor.Properties.Resources.resources
+G:\Projects\Visual_Studio\CSharp\SQLEditor\SQLEditor\obj\Debug\SQLEditor.csproj.GenerateResource.cache
+G:\Projects\Visual_Studio\CSharp\SQLEditor\SQLEditor\obj\Debug\SQLEditor.exe
+G:\Projects\Visual_Studio\CSharp\SQLEditor\SQLEditor\obj\Debug\SQLEditor.pdb
