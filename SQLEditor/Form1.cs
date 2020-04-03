@@ -62,25 +62,23 @@ namespace SQLEditor
                 "[MoodleAssignPageNo2]=[MoodleAssignPageNo] ," +
                 "[GroupMembers2]=[GroupMembers] ";
 
+
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SqlServer"].ToString());
+            con.Open();
+            SqlTransaction transaction = con.BeginTransaction();
             string stmt = "SELECT COUNT([Id]) FROM [dbo].[Documents]  WHERE [Id] >" + (starting_id - 1);
             int total_records = 0;
             try
             {
-                using (SqlCommand cmdCount = new SqlCommand(stmt, con))
+                using (SqlCommand cmdCount = new SqlCommand(stmt, con, transaction))
                 {
-                    con.Open();
                     total_records = (int)cmdCount.ExecuteScalar();
-                    listBox1.Items.Insert(0, "Total records are " + count);
+                    listBox1.Items.Insert(0, "Total records are " + total_records);
                 }
             }
             catch (Exception ex)
             {
                 listBox1.Items.Insert(0, ex.ToString());
-            }
-            finally
-            {
-                con.Close();
             }
 
             try
@@ -92,24 +90,22 @@ namespace SQLEditor
                     int remain_count = count;
                     for (int i = 0; i < (int)(count / record_n) + 1; i++)
                     {
-                        
                         if (record_n > remain_count)
                         {
                             record_n = remain_count;
                         }
                         string qry = "UPDATE TOP(" + record_n + ") [dbo].[Documents] SET " + set_cols +
                         " WHERE [Id] >" + (starting_id - 1);
-
-                        con.Open();
-                        SqlCommand oCmd = new SqlCommand(qry, con);
+                        //con.Open();
+                        SqlCommand oCmd = new SqlCommand(qry, con, transaction);
                         var num = oCmd.ExecuteNonQuery();
-                        con.Close();
+                        //con.Close();
                         if (num < 1)
                         {
                             break;
                         }
-                        con.Open();
-                        oCmd = new SqlCommand("SELECT TOP(" + record_n + ") [Id] FROM [dbo].[Documents]  WHERE [Id] >" + (starting_id - 1), con);
+                        //con.Open();
+                        oCmd = new SqlCommand("SELECT TOP(" + record_n + ") [Id] FROM [dbo].[Documents]  WHERE [Id] >" + (starting_id - 1), con, transaction);
                         using (SqlDataReader oReader = oCmd.ExecuteReader())
                         {
                             List<string> ids = new List<string>();
@@ -125,7 +121,8 @@ namespace SQLEditor
                             }
 
                         }
-                        con.Close();
+                        transaction.Commit();
+                        
                         affected_count += num;
                         textBox6.Text = affected_count.ToString();
                         Application.DoEvents();
@@ -140,6 +137,7 @@ namespace SQLEditor
                         listBox1.Items.Insert(0, "We are done for " + affected_count);
                         listBox1.Items.Insert(0,"We are waiting...");
                         WaitSomeTime(Int32.Parse(textBox4.Text));
+                        transaction = con.BeginTransaction();
                     }
                 }
                 listBox1.Items.Insert(0, "All done!");
@@ -148,6 +146,11 @@ namespace SQLEditor
             catch (Exception ex)
             {
                 listBox1.Items.Insert(0, ex.ToString());
+                transaction.Rollback();
+            }
+            finally
+            {
+                con.Close();
             }
         }
     }
